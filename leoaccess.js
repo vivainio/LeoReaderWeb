@@ -7,7 +7,13 @@
   LeoAccess = (function() {
 
     function LeoAccess() {
+      var _this = this;
       this.nodes = {};
+      this.parentgnx = "";
+      $("#btnback").click(function() {
+        console.log("Click back");
+        return _this.showSubtree(_this.parentgnx);
+      });
     }
 
     LeoAccess.prototype.opendoc = function(url) {
@@ -35,17 +41,30 @@
     };
 
     LeoAccess.prototype.showSubtree = function(parentGnx) {
-      var $n, $r, chignx, chin, n, _i, _len, _ref;
+      var $a, $b, $n, $r, chignx, chin, n, that, _i, _len, _ref;
       n = this.nodes[parentGnx];
       $r = $("#lchildren");
+      that = this;
       $r.empty();
+      $b = $("#bodytext");
+      $b.text(n.b);
+      $("#hstring").text(n.h);
       console.log("Show subtree for " + parentGnx);
       _ref = n.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         chignx = _ref[_i];
         chin = this.nodes[chignx];
         console.log("h = " + chin.h);
-        $n = $('<li><a href=""/>' + chin.h + '</li>');
+        $n = $('<li><a href="#"/>' + chin.h + '</li>');
+        $a = $n.find("a");
+        $a.data("gnx", chignx);
+        $a.click(function() {
+          var gnx;
+          console.log($(this));
+          gnx = $(this).data("gnx");
+          that.parentgnx = parentGnx;
+          return that.showSubtree(gnx);
+        });
         console.log("Appended " + $n);
         $r.append($n);
       }
@@ -57,8 +76,6 @@
   })();
 
   console.log("Parsing");
-
-  root.LeoAccess = LeoAccess;
 
   $(document).ready(function() {
     console.log("Start dl");
