@@ -26,7 +26,8 @@
       this.parentgnx = "";
       this.showSubtree("");
       $("#btnback").hide();
-      return this.updateCrumb();
+      this.updateCrumb();
+      return $("#hstring").text("Leo Reader");
     };
 
     LeoAccess.prototype.drillTo = function(gnx) {
@@ -43,17 +44,17 @@
       var cs, gnx, hs;
       hs = (function() {
         var _i, _len, _ref, _results;
-        _ref = this.pstack.slice(1).concat([this.parentgnx]);
+        _ref = this.pstack.slice(1);
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           gnx = _ref[_i];
-          _results.push(this.nodes[gnx].h.slice(0, 40));
+          _results.push('<a href="#" data-role="button">' + this.nodes[gnx].h.slice(0, 40) + '</a>');
         }
         return _results;
       }).call(this);
       hs.reverse();
-      cs = hs.join(" < ");
-      $("#lfooter").text(cs);
+      cs = hs.join(" > ");
+      $("#lfooter").html(cs);
       return hs;
     };
 

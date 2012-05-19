@@ -19,6 +19,7 @@ class LeoAccess
         @showSubtree ""
         $("#btnback").hide()
         @updateCrumb()
+        $("#hstring").text("Leo Reader")
         
         
         
@@ -32,11 +33,10 @@ class LeoAccess
         @updateCrumb()
         
     updateCrumb: ->
-        hs = (@nodes[gnx].h.slice(0,40) for gnx in @pstack[1..].concat([@parentgnx]))
+        hs = ('<a href="#" data-role="button">' +  @nodes[gnx].h.slice(0,40) + '</a>' for gnx in @pstack[1..])
         hs.reverse()            
-        cs = hs.join(" < ")
-        $("#lfooter").text(cs)
-        
+        cs = hs.join(" > ")
+        $("#lfooter").html(cs)
         
         return hs
         
