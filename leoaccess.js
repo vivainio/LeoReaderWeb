@@ -26,6 +26,7 @@
       this.parentgnx = "";
       this.showSubtree("");
       $("#btnback").hide();
+      $("#bodytext").hide();
       this.updateCrumb();
       return $("#hstring").text("Leo Reader");
     };
@@ -83,7 +84,6 @@
             h: n.h,
             children: n.children
           };
-          console.log("Got h " + _this.nodes[n.gnx].h);
         }
         _this.nodes[""] = {
           b: "hidden root",
@@ -125,8 +125,6 @@
     return LeoAccess;
 
   })();
-
-  console.log("Parsing");
 
   $(document).ready(function() {
     console.log("Start dl");

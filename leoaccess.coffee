@@ -18,6 +18,7 @@ class LeoAccess
         @parentgnx = ""
         @showSubtree ""
         $("#btnback").hide()
+        $("#bodytext").hide()
         @updateCrumb()
         $("#hstring").text("Leo Reader")
         
@@ -61,7 +62,7 @@ class LeoAccess
                     h : n.h
                     children : n.children
                     
-                console.log "Got h " + @nodes[n.gnx].h
+                #console.log "Got h " + @nodes[n.gnx].h
                     
             
             @nodes[""] =
@@ -108,11 +109,6 @@ class LeoAccess
         $r.listview('refresh')
             
 
-        
-        
-
-console.log("Parsing")
-#root.LeoAccess = LeoAccess
         
 $(document).ready ->
     console.log "Start dl"
