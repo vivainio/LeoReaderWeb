@@ -73,7 +73,8 @@ class LeoAccess
                 children : data.top
                 
                 
-            @goTop ""            
+            @goTop ""
+            $.mobile.hidePageLoadingMsg()
                 
             #t = $(this)
             #console.log("Ajax ok " + data)
@@ -115,6 +116,7 @@ class LeoAccess
 $(document).ready ->
     console.log "Start dl"
     root.la = new LeoAccess()
+    $.mobile.showPageLoadingMsg()
     root.la.opendoc("test_doc.leo.json")
     
     

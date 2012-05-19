@@ -91,7 +91,8 @@
           h: "hidden root",
           children: data.top
         };
-        return _this.goTop("");
+        _this.goTop("");
+        return $.mobile.hidePageLoadingMsg();
       });
     };
 
@@ -130,6 +131,7 @@
   $(document).ready(function() {
     console.log("Start dl");
     root.la = new LeoAccess();
+    $.mobile.showPageLoadingMsg();
     return root.la.opendoc("test_doc.leo.json");
   });
 
