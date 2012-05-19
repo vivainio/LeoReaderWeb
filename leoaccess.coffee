@@ -18,6 +18,7 @@ class LeoAccess
         @parentgnx = ""
         @showSubtree ""
         $("#btnback").hide()
+        @updateCrumb()
         
         
         
@@ -28,12 +29,15 @@ class LeoAccess
         @pstack.push(@parentgnx)
         @parentgnx = gnx
         @showSubtree gnx
+        @updateCrumb()
+        
     updateCrumb: ->
-        hs = (@nodes[gnx].h for gnx in @pstack)
-            
-        cs = hs.join(" > ")
+        hs = (@nodes[gnx].h.slice(0,40) for gnx in @pstack[1..].concat([@parentgnx]))
+        hs.reverse()            
+        cs = hs.join(" < ")
         $("#lfooter").text(cs)
-        $('#dfooter').r
+        
+        
         return hs
         
     
@@ -41,9 +45,11 @@ class LeoAccess
         if @pstack.length == 1
             @goTop()
             return
-        
+                
         newp = @pstack.pop()
+        @parentgnx = newp
         @showSubtree newp
+        @updateCrumb()
         
     opendoc: (url) ->
         $.getJSON url, (data) =>

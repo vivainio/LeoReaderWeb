@@ -25,7 +25,8 @@
       this.pstack = [];
       this.parentgnx = "";
       this.showSubtree("");
-      return $("#btnback").hide();
+      $("#btnback").hide();
+      return this.updateCrumb();
     };
 
     LeoAccess.prototype.drillTo = function(gnx) {
@@ -34,24 +35,25 @@
       }
       this.pstack.push(this.parentgnx);
       this.parentgnx = gnx;
-      return this.showSubtree(gnx);
+      this.showSubtree(gnx);
+      return this.updateCrumb();
     };
 
     LeoAccess.prototype.updateCrumb = function() {
       var cs, gnx, hs;
       hs = (function() {
         var _i, _len, _ref, _results;
-        _ref = this.pstack;
+        _ref = this.pstack.slice(1).concat([this.parentgnx]);
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           gnx = _ref[_i];
-          _results.push(this.nodes[gnx].h);
+          _results.push(this.nodes[gnx].h.slice(0, 40));
         }
         return _results;
       }).call(this);
-      cs = hs.join(" > ");
+      hs.reverse();
+      cs = hs.join(" < ");
       $("#lfooter").text(cs);
-      $('#dfooter').r;
       return hs;
     };
 
@@ -62,7 +64,9 @@
         return;
       }
       newp = this.pstack.pop();
-      return this.showSubtree(newp);
+      this.parentgnx = newp;
+      this.showSubtree(newp);
+      return this.updateCrumb();
     };
 
     LeoAccess.prototype.opendoc = function(url) {
