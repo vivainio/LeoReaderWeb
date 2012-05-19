@@ -34,6 +34,7 @@
     LeoAccess.prototype.drillTo = function(gnx) {
       if (this.isTop()) {
         $("#btnback").show();
+        $('#bodytext').show();
       }
       this.pstack.push(this.parentgnx);
       this.parentgnx = gnx;

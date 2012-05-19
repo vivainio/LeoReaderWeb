@@ -27,6 +27,8 @@ class LeoAccess
     drillTo: (gnx) ->
         if @isTop()
             $("#btnback").show()
+            $('#bodytext').show()
+            
             
         @pstack.push(@parentgnx)
         @parentgnx = gnx
