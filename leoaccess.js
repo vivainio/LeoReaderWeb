@@ -10,11 +10,60 @@
       var _this = this;
       this.nodes = {};
       this.parentgnx = "";
+      this.pstack = [];
       $("#btnback").click(function() {
         console.log("Click back");
-        return _this.showSubtree(_this.parentgnx);
+        return _this.goBack();
       });
     }
+
+    LeoAccess.prototype.isTop = function() {
+      return this.pstack.length === 0;
+    };
+
+    LeoAccess.prototype.goTop = function() {
+      this.pstack = [];
+      this.parentgnx = "";
+      this.showSubtree("");
+      return $("#btnback").hide();
+    };
+
+    LeoAccess.prototype.drillTo = function(gnx) {
+      if (this.isTop()) {
+        $("#btnback").show();
+      }
+      this.pstack.push(this.parentgnx);
+      this.parentgnx = gnx;
+      return this.showSubtree(gnx);
+    };
+
+    LeoAccess.prototype.updateCrumb = function() {
+      var cs, gnx, hs;
+      hs = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.pstack;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          gnx = _ref[_i];
+          _results.push(this.nodes[gnx].h);
+        }
+        return _results;
+      }).call(this);
+      cs = hs.join(" > ");
+      $("#lfooter").text(cs);
+      $('#dfooter').r;
+      return hs;
+    };
+
+    LeoAccess.prototype.goBack = function() {
+      var newp;
+      if (this.pstack.length === 1) {
+        this.goTop();
+        return;
+      }
+      newp = this.pstack.pop();
+      return this.showSubtree(newp);
+    };
 
     LeoAccess.prototype.opendoc = function(url) {
       var _this = this;
@@ -36,7 +85,7 @@
           h: "hidden root",
           children: data.top
         };
-        return _this.showSubtree("");
+        return _this.goTop("");
       });
     };
 
@@ -55,17 +104,14 @@
         chignx = _ref[_i];
         chin = this.nodes[chignx];
         console.log("h = " + chin.h);
-        $n = $('<li><a href="#"/>' + chin.h + '</li>');
+        $n = $('<li><a href="#">' + chin.h + '</a></li>');
         $a = $n.find("a");
         $a.data("gnx", chignx);
         $a.click(function() {
           var gnx;
-          console.log($(this));
           gnx = $(this).data("gnx");
-          that.parentgnx = parentGnx;
-          return that.showSubtree(gnx);
+          return that.drillTo(gnx);
         });
-        console.log("Appended " + $n);
         $r.append($n);
       }
       return $r.listview('refresh');

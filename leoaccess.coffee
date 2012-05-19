@@ -4,11 +4,47 @@ class LeoAccess
     constructor: ->
         @nodes = {}
         @parentgnx = ""
+        @pstack = []
         $("#btnback").click =>
             console.log "Click back"
-            @showSubtree @parentgnx
+            @goBack()
+            #@showSubtree @parentgnx
     
+    isTop: ->
+        return @pstack.length == 0
+                
+    goTop: ->
+        @pstack = []
+        @parentgnx = ""
+        @showSubtree ""
+        $("#btnback").hide()
+        
+        
+        
+    drillTo: (gnx) ->
+        if @isTop()
+            $("#btnback").show()
+            
+        @pstack.push(@parentgnx)
+        @parentgnx = gnx
+        @showSubtree gnx
+    updateCrumb: ->
+        hs = (@nodes[gnx].h for gnx in @pstack)
+            
+        cs = hs.join(" > ")
+        $("#lfooter").text(cs)
+        $('#dfooter').r
+        return hs
+        
     
+    goBack: ->
+        if @pstack.length == 1
+            @goTop()
+            return
+        
+        newp = @pstack.pop()
+        @showSubtree newp
+        
     opendoc: (url) ->
         $.getJSON url, (data) =>
             console.log "got json! "
@@ -28,7 +64,7 @@ class LeoAccess
                 children : data.top
                 
                 
-            @showSubtree ""
+            @goTop ""            
                 
             #t = $(this)
             #console.log("Ajax ok " + data)
@@ -38,6 +74,7 @@ class LeoAccess
         n = @nodes[parentGnx]
         $r = $("#lchildren")
         #$page = $("#nodespage")
+        #@parentgnx = parentGnx
         
         that = this
         $r.empty()
@@ -51,17 +88,15 @@ class LeoAccess
         for chignx in n.children
             chin = @nodes[chignx]
             console.log "h = " + chin.h
-            $n = $('<li><a href="#"/>' + chin.h + '</li>')
+            $n = $('<li><a href="#">' + chin.h + '</a></li>')
             $a = $n.find("a")
             $a.data "gnx", chignx
             $a.click ->
-                console.log $(this)
+                #console.log $(this)
                 gnx = $(this).data("gnx")
-    
-                that.parentgnx = parentGnx
-                that.showSubtree gnx
+                that.drillTo gnx
                 
-            console.log("Appended " + $n)
+            #console.log("Appended " + $n)
             $r.append($n)
             
         $r.listview('refresh')
