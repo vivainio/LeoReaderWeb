@@ -28,10 +28,13 @@ class LeoAccess
         $.mobile.changePage($("#flatnodespage"))
         @walkSubtree @nodes[""], (n) =>                        
             console.log("seen " + n.h)
-            $li = $("<li>")
+            h = n.h
             
-            $li.text(n.h)
-            $li.data("gnx", n.gnx)
+            $li = $("<li>")
+                .text(n.h)
+                .data("gnx", n.gnx)
+                
+                
             $ul.append($li)
         $("#flatlist").empty().append($ul)
         

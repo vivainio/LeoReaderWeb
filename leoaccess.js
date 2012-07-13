@@ -40,11 +40,10 @@
       $ul = $("<ul>");
       $.mobile.changePage($("#flatnodespage"));
       this.walkSubtree(this.nodes[""], function(n) {
-        var $li;
+        var $li, h;
         console.log("seen " + n.h);
-        $li = $("<li>");
-        $li.text(n.h);
-        $li.data("gnx", n.gnx);
+        h = n.h;
+        $li = $("<li>").text(n.h).data("gnx", n.gnx);
         return $ul.append($li);
       });
       return $("#flatlist").empty().append($ul);
