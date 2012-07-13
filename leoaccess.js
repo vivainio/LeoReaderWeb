@@ -40,10 +40,14 @@
       $ul = $("<ul>");
       $.mobile.changePage($("#flatnodespage"));
       this.walkSubtree(this.nodes[""], function(n) {
-        var $li, h;
-        console.log("seen " + n.h);
+        var $li, h, tag;
         h = n.h;
-        $li = $("<li>").text(n.h).data("gnx", n.gnx);
+        $li = $("<li>").text(h).data("gnx", n.gnx);
+        if (_.str.startsWith(h, "@")) {
+          tag = _.str.words(h)[0].slice(1);
+          console.log("adding class " + tag);
+          $li.addClass(tag);
+        }
         return $ul.append($li);
       });
       return $("#flatlist").empty().append($ul);

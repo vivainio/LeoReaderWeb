@@ -27,12 +27,19 @@ class LeoAccess
         #for n in 
         $.mobile.changePage($("#flatnodespage"))
         @walkSubtree @nodes[""], (n) =>                        
-            console.log("seen " + n.h)
+            #console.log("seen " + n.h)
             h = n.h
             
             $li = $("<li>")
-                .text(n.h)
+                .text(h)
                 .data("gnx", n.gnx)
+
+
+            if _.str.startsWith(h, "@")
+                tag = _.str.words(h)[0].slice(1)
+                console.log("adding class " + tag)
+                $li.addClass(tag)
+
                 
                 
             $ul.append($li)
