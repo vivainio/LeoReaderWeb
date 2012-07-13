@@ -9,6 +9,32 @@ class LeoAccess
             console.log "Click back"
             @goBack()
             #@showSubtree @parentgnx
+        
+        $("#btnflat").click =>
+        
+            @goFlat()
+            
+    walkSubtree: (n, f) ->        
+        for chignx in n.children
+            chin = @nodes[chignx]
+            f(chin)            
+            @walkSubtree chin,f
+            
+        
+    goFlat: ->
+        console.log "Flat view!"
+        $ul = $("<ul>")
+        #for n in 
+        $.mobile.changePage($("#flatnodespage"))
+        @walkSubtree @nodes[""], (n) =>                        
+            console.log("seen " + n.h)
+            $li = $("<li>")
+            
+            $li.text(n.h)
+            $li.data("gnx", n.gnx)
+            $ul.append($li)
+        $("#flatlist").empty().append($ul)
+        
     
     isTop: ->
         return @pstack.length == 0
@@ -36,10 +62,11 @@ class LeoAccess
         @updateCrumb()
         
     updateCrumb: ->
-        hs = ('<a href="#" data-role="button">' +  @nodes[gnx].h.slice(0,40) + '</a>' for gnx in @pstack[1..])
+        allgnx = @pstack[1..]
+        hs = ('<a href="#" data-role="button">' +  @nodes[gnx].h.slice(0,40) + '</a>' for gnx in allgnx)                    
         hs.reverse()            
         cs = hs.join(" > ")
-        $("#lfooter").html(cs)
+        $("#breadcrumb").html(">" + cs)
         
         return hs
         
@@ -62,6 +89,7 @@ class LeoAccess
                 @nodes[n.gnx] =
                     b : n.b
                     h : n.h
+                    gnx: n.gnx
                     children : n.children
                     
                 #console.log "Got h " + @nodes[n.gnx].h
@@ -70,6 +98,7 @@ class LeoAccess
             @nodes[""] =
                 b : "hidden root"
                 h : "hidden root"
+                gnx: ""
                 children : data.top
                 
                 

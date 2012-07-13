@@ -15,7 +15,40 @@
         console.log("Click back");
         return _this.goBack();
       });
+      $("#btnflat").click(function() {
+        return _this.goFlat();
+      });
     }
+
+    LeoAccess.prototype.walkSubtree = function(n, f) {
+      var chignx, chin, _i, _len, _ref, _results;
+      _ref = n.children;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        chignx = _ref[_i];
+        chin = this.nodes[chignx];
+        f(chin);
+        _results.push(this.walkSubtree(chin, f));
+      }
+      return _results;
+    };
+
+    LeoAccess.prototype.goFlat = function() {
+      var $ul,
+        _this = this;
+      console.log("Flat view!");
+      $ul = $("<ul>");
+      $.mobile.changePage($("#flatnodespage"));
+      this.walkSubtree(this.nodes[""], function(n) {
+        var $li;
+        console.log("seen " + n.h);
+        $li = $("<li>");
+        $li.text(n.h);
+        $li.data("gnx", n.gnx);
+        return $ul.append($li);
+      });
+      return $("#flatlist").empty().append($ul);
+    };
 
     LeoAccess.prototype.isTop = function() {
       return this.pstack.length === 0;
@@ -43,20 +76,20 @@
     };
 
     LeoAccess.prototype.updateCrumb = function() {
-      var cs, gnx, hs;
+      var allgnx, cs, gnx, hs;
+      allgnx = this.pstack.slice(1);
       hs = (function() {
-        var _i, _len, _ref, _results;
-        _ref = this.pstack.slice(1);
+        var _i, _len, _results;
         _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          gnx = _ref[_i];
+        for (_i = 0, _len = allgnx.length; _i < _len; _i++) {
+          gnx = allgnx[_i];
           _results.push('<a href="#" data-role="button">' + this.nodes[gnx].h.slice(0, 40) + '</a>');
         }
         return _results;
       }).call(this);
       hs.reverse();
       cs = hs.join(" > ");
-      $("#lfooter").html(cs);
+      $("#breadcrumb").html(">" + cs);
       return hs;
     };
 
@@ -83,12 +116,14 @@
           _this.nodes[n.gnx] = {
             b: n.b,
             h: n.h,
+            gnx: n.gnx,
             children: n.children
           };
         }
         _this.nodes[""] = {
           b: "hidden root",
           h: "hidden root",
+          gnx: "",
           children: data.top
         };
         _this.goTop("");
